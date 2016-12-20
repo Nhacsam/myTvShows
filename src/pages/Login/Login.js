@@ -78,7 +78,7 @@ class Login extends Component {
                 <TextInput
                   style={styles.input}
                   placeholder="Username"
-                  onChangeText={this.props.onLoginChange}
+                  onChangeText={this.props.onUsernameChange}
                   placeholderTextColor={appStyle.colors.lightPlaceholder}
                   autoFocus
                   returnKeyType="next"
@@ -105,7 +105,7 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  onLoginChange: PropTypes.func,
+  onUsernameChange: PropTypes.func,
   onPasswordChange: PropTypes.func,
   sendLogin: PropTypes.func,
 };
