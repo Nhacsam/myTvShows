@@ -21,6 +21,7 @@ export const appStyle = {
   colors: {
     primary: '#05A5D1',
     lightText: '#FAFAFA',
+    lightPlaceholder: '#D0D0D0',
     background: '#F5FCFF',
   },
   margins: {
@@ -30,6 +31,7 @@ export const appStyle = {
   dimensions: {
     touchableHeight: 48,
     visibleButtonHeight: 36,
+    minButtonWidth: 130,
   },
 };
 

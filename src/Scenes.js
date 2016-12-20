@@ -27,11 +27,17 @@ const Scenes = () => (
       backButtonImage={backChevron}
     >
       <Scene
+        key="login"
+        type={ActionConst.RESET}
+        component={Pages.Login}
+        initial
+        hideNavBar
+        />
+      <Scene
         key="home"
         type={ActionConst.RESET}
         component={Pages.Home}
         renderTitle={LogoTitle}
-        initial
       />
       <Scene
         key="infos"

@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 const Page = props => (
   <View
     style={[styles.page, {
-      paddingTop: props.noNavBar ? 0 : appStyle.navbar.height,
+      paddingTop: props.noNavBar ? appStyle.navbar.offset : appStyle.navbar.height,
       paddingHorizontal: props.noMargin ? 0 : appStyle.margins.outer,
       backgroundColor: props.backgroundColor,
     }]}
