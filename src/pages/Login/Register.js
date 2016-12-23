@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class Login extends Component {
+class Register extends Component {
   render() {
     return (
       <View style={styles.fieldsContent}>
@@ -39,6 +39,16 @@ class Login extends Component {
           placeholderTextColor={appStyle.colors.lightPlaceholder}
           autoFocus
           returnKeyType="next"
+          onSubmitEditing={() => this.refs.email.focus()}
+          />
+        <TextInput
+          ref='email'
+          style={styles.input}
+          placeholder="email"
+          onChangeText={this.props.onEmailChange}
+          placeholderTextColor={appStyle.colors.lightPlaceholder}
+          returnKeyType="next"
+          keyboardType="email-address"
           onSubmitEditing={() => this.refs.password.focus()}
           />
         <TextInput
@@ -48,19 +58,20 @@ class Login extends Component {
           secureTextEntry
           onChangeText={this.props.onPasswordChange}
           placeholderTextColor={appStyle.colors.lightPlaceholder}
-          onSubmitEditing={() => this.props.sendLogin()}
+          onSubmitEditing={() => this.props.register()}
           returnKeyType="send"
           />
-        <LoginButton onPress={() => this.props.sendLogin()}>Send</LoginButton>
+        <LoginButton onPress={() => this.props.register()}>Send</LoginButton>
       </View>
     );
   }
 }
 
-Login.propTypes = {
+Register.propTypes = {
   onUsernameChange: PropTypes.func,
+  onEmailChange: PropTypes.func,
   onPasswordChange: PropTypes.func,
-  sendLogin: PropTypes.func,
+  register: PropTypes.func,
 };
 
-export default Login;
+export default Register;

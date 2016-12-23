@@ -2,11 +2,15 @@ import { Actions } from 'react-native-router-flux';
 import { takeEvery } from 'redux-saga';
 import { call, put, select } from 'redux-saga/effects';
 
+import { register as registerAPI } from 'mySeries/src/services/api';
+
 // ACTION TYPES
 export const actionTypes = {
   login: 'USER.LOGIN',
+  register: 'USER.REGISTER',
   updateUsername: 'LOGIN.UPDATE_USERNAME',
   updatePassword: 'LOGIN.UPDATE_PASSWORD',
+  updateEmail:  'LOGIN.UPDATE_EMAIL',
   loginSuccess: 'USER.LOGIN_SUCCESS',
   loginFail: 'USER.LOGIN_FAIL',
 };
@@ -14,6 +18,18 @@ export const actionTypes = {
 // ACTION CREATOR
 export function login() {
   return { type: actionTypes.login };
+}
+
+export function register() {
+  return { type: actionTypes.register };
+}
+
+export function registerSuccess() {
+  return { type: actionTypes.loginSuccess };
+}
+
+export function registerFail(errorMsg) {
+  return { type: actionTypes.loginFail, error: errorMsg};
 }
 
 export function loginSuccess() {
@@ -38,6 +54,13 @@ export function updatePassword(password) {
   };
 }
 
+export function updateEmail(email) {
+  return {
+    type: actionTypes.updateEmail,
+    email,
+  };
+}
+
 // REDUCERS
 export function loginReducer(state = {}, action = {}) {
   switch (action.type) {
@@ -50,6 +73,11 @@ export function loginReducer(state = {}, action = {}) {
       return {
         ...state,
         password: action.password,
+      };
+    case actionTypes.updateEmail:
+      return {
+        ...state,
+        email: action.email,
       };
     default:
       return state;
@@ -67,7 +95,20 @@ function* sendLoginSaga(action) {
   console.log(loginCredential);
 }
 
+function* sendRegisterSaga(action) {
+  console.log('register');
+  const loginCredential = yield select(getLoginCredentials);
+  try {
+    yield call(registerAPI, loginCredential);
+    yield put(registerSuccess());
+    Actions.login();
+  } catch (e) {
+    yield put(registerFail());
+  }
+}
+
 
 export function* loginSaga() {
+  yield* takeEvery(actionTypes.register, sendRegisterSaga);
   yield* takeEvery(actionTypes.login, sendLoginSaga);
 }
