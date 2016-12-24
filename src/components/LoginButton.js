@@ -3,6 +3,7 @@ import { TouchableOpacity, Text, StyleSheet, View, ActivityIndicator, LayoutAnim
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import appStyle from 'mySeries/src/appStyle';
+import * as Animatable from 'react-native-animatable';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,7 +11,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minHeight: appStyle.dimensions.touchableHeight * 1.3,
     marginVertical: appStyle.margins.inner,
-    overflow: 'hidden',
   },
   button: {
     alignSelf: 'stretch',
@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
 
     backgroundColor: appStyle.colors.lightText,
     borderRadius: 30,
+    overflow: 'hidden',
   },
   buttonFetching: {
     width: appStyle.dimensions.largeButtonHeight,
@@ -77,16 +78,34 @@ class Button extends Component {
       nextStatus = this.status.SUCCESS;
     }
 
+    if (nextStatus === this.state.status) {
+      return;
+    }
     this.setState({status: nextStatus});
 
+    this.restoreAfterTimer(nextStatus);
+    this.launchAnimation(nextStatus);
+  }
+
+  restoreAfterTimer(fromStatus) {
     setTimeout(() => {
-      if (nextStatus === this.status.FETCHING || this.state.status !== nextStatus) {
+      if (fromStatus === this.status.FETCHING || this.state.status !== fromStatus) {
         return;
       }
       this.setState({status: this.status.IDLE});
-    }, 2000);
-
+    }, 3000);
   }
+
+  launchAnimation(status) {
+    if (status === this.status.ERROR) {
+      this.refs.button.rotate(300);
+      setTimeout(() => this.refs.button.shake(400), 400);
+    }
+    if (status === this.status.SUCCESS) {
+      this.refs.button.rotate(300);
+    }
+  }
+
 
   componentWillUpdate() {
     LayoutAnimation.easeInEaseOut();
@@ -133,9 +152,9 @@ class Button extends Component {
 
     return (
       <TouchableOpacity onPress={props.onPress} style={styles.container}>
-        <View style={[styles.button, buttonStyle]}>
+        <Animatable.View style={[styles.button, buttonStyle]} ref="button">
           { this.getContent()}
-        </View>
+        </Animatable.View>
       </TouchableOpacity>
     );
   }

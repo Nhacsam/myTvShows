@@ -124,8 +124,8 @@ function* sendRegisterSaga(action) {
   try {
     yield call(registerAPI, loginCredential);
     yield put(registerSuccess());
-    yield call(delay, 600);
-    Actions.login();
+    yield call(delay, 1000);
+    Actions.home();
   } catch (e) {
     yield put(registerFail());
   }
