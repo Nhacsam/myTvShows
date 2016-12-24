@@ -61,7 +61,12 @@ class Register extends Component {
           onSubmitEditing={() => this.props.register()}
           returnKeyType="send"
           />
-        <LoginButton onPress={() => this.props.register()}>Send</LoginButton>
+        <LoginButton onPress={() => this.props.register()}
+                     isFetching={this.props.requestState.fetching}
+                     isError={this.props.requestState.fail}
+                     isSuccess={this.props.requestState.success}
+
+          >Send</LoginButton>
       </View>
     );
   }
@@ -72,6 +77,10 @@ Register.propTypes = {
   onEmailChange: PropTypes.func,
   onPasswordChange: PropTypes.func,
   register: PropTypes.func,
+  requestState: PropTypes.object,
+};
+Register.defaultProps = {
+  requestState: {},
 };
 
 export default Register;

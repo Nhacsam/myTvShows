@@ -4,6 +4,8 @@ import { call, put, select } from 'redux-saga/effects';
 
 import { register as registerAPI } from 'mySeries/src/services/api';
 
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
 // ACTION TYPES
 export const actionTypes = {
   login: 'USER.LOGIN',
@@ -79,6 +81,28 @@ export function loginReducer(state = {}, action = {}) {
         ...state,
         email: action.email,
       };
+    case actionTypes.loginSuccess:
+      return {
+        ...state,
+        _metadata: {
+          success: true,
+        }
+      };
+    case actionTypes.loginFail:
+      return {
+        ...state,
+        _metadata: {
+          fail: true,
+        }
+      };
+    case actionTypes.login:
+    case actionTypes.register:
+      return {
+        ...state,
+        _metadata: {
+          fetching: true,
+        }
+      };
     default:
       return state;
   }
@@ -96,11 +120,11 @@ function* sendLoginSaga(action) {
 }
 
 function* sendRegisterSaga(action) {
-  console.log('register');
   const loginCredential = yield select(getLoginCredentials);
   try {
     yield call(registerAPI, loginCredential);
     yield put(registerSuccess());
+    yield call(delay, 600);
     Actions.login();
   } catch (e) {
     yield put(registerFail());

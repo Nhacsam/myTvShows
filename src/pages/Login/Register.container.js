@@ -3,6 +3,7 @@ import { register, updatePassword, updateUsername, updateEmail } from 'mySeries/
 import Register from './Register';
 
 const mapStateToProps = (state) => ({
+  requestState: state.login._metadata || {},
 });
 
 const mapDispatchToProps = (dispatch) => ({

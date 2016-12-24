@@ -32,6 +32,8 @@ export const appStyle = {
     touchableHeight: 48,
     visibleButtonHeight: 36,
     minButtonWidth: 130,
+    largeButtonHeight: 45,
+    largeButtonWidth: 200,
   },
 };
 
