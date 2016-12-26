@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { find } from 'mySeries/src/modules/TVshows';
+import { find, select } from 'mySeries/src/modules/TVshows';
 import Home from './Home';
 
 const mapStateToProps = (state) => ({
@@ -9,6 +9,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getTvShows: () => dispatch(find()),
+  selectTvShow: (show) => dispatch(select(show)),
 });
 
 const HomeContainer = connect(mapStateToProps, mapDispatchToProps)(Home);

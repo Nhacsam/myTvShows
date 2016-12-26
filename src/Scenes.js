@@ -56,9 +56,9 @@ const Scenes = () => (
         initial
       />
       <Scene
-        key="infos"
-        component={Pages.Infos}
-        title="Infos"
+        key="tvShow"
+        component={Pages.TvShow}
+        title="Tv Show"
       />
     </Scene>
   </Router>

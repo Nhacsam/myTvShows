@@ -35,12 +35,15 @@ class Home extends Component {
   }
 
   render() {
+    const { selectTvShow } = this.props;
     return (
       <Page>
         {this.props.isFetching && ! this.props.tvShows.length && <ActivityIndicator />}
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={(tvShow, sectionID, rowID) => <TvShowListItem tvShow={tvShow} index={rowID} />}
+          renderRow={(tvShow, sectionID, rowID) => (
+            <TvShowListItem tvShow={tvShow} index={rowID} onPress={() => selectTvShow && selectTvShow(tvShow)} />)
+          }
           enableEmptySections
           />
       </Page>
@@ -52,6 +55,7 @@ Home.propTypes = {
   tvShows: PropTypes.array.isRequired,
   getTvShows: PropTypes.func,
   isFetching: PropTypes.bool,
+  selectTvShow: PropTypes.func
 };
 
 export default Home;

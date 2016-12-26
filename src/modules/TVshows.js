@@ -1,6 +1,6 @@
 import { Actions } from 'react-native-router-flux';
 import { takeLatest } from 'redux-saga';
-import { call, put, select } from 'redux-saga/effects';
+import { call, put } from 'redux-saga/effects';
 
 import { find as findAPI } from 'mySeries/src/services/api';
 
@@ -9,6 +9,7 @@ export const actionTypes = {
   find: 'TVSHOWS.FIND',
   findSuccess: 'TVSHOWS.FIND_SUCCESS',
   findFail: 'TVSHOWS.FIND_FAIL',
+  select: 'TVSHOWS.SELECT'
 };
 
 // ACTION CREATOR
@@ -22,6 +23,10 @@ export function findSuccess(response) {
 
 export function findFail(errorMsg) {
   return { type: actionTypes.findFail, error: errorMsg};
+}
+
+export function select(tvShow) {
+  return { type: actionTypes.select, tvShow};
 }
 
 // REDUCERS
@@ -48,12 +53,17 @@ export function tvShowsReducer(state = initialState, action = {}) {
     case actionTypes.findFail:
       return {
         ...state,
-        _metadata: { fail: true }
+        _metadata: { fail: true },
       };
       case actionTypes.find:
         return {
           ...state,
-          _metadata: { fetching: true }
+          _metadata: { fetching: true },
+        };
+      case actionTypes.select:
+        return {
+          ...state,
+          current: action.tvShow,
         };
     default:
       return state;
@@ -70,9 +80,13 @@ function* findSaga(action) {
   }
 }
 
+function* selectSaga() {
+  Actions.tvShow();
+}
 
 export function* tvShowsSaga() {
   yield* [
     takeLatest(actionTypes.find, findSaga),
+    takeLatest(actionTypes.select, selectSaga),
   ];
 }
