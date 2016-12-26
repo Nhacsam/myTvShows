@@ -34,7 +34,6 @@ const Scenes = () => (
         <Scene
           key="splash"
           component={Pages.Splash}
-          initial
         />
         <Scene
           key="login"
@@ -53,7 +52,8 @@ const Scenes = () => (
         key="home"
         type={ActionConst.RESET}
         component={Pages.Home}
-        renderTitle={LogoTitle}
+        title="Tv shows"
+        initial
       />
       <Scene
         key="infos"

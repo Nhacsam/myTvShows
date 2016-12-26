@@ -19,10 +19,10 @@ export const appStyle = {
     },
   },
   colors: {
-    primary: '#05A5D1',
+    primary: '#5b6675',
     lightText: '#FAFAFA',
     lightPlaceholder: '#D0D0D0',
-    background: '#F5FCFF',
+    background: '#66757e',
   },
   margins: {
     inner: 10,

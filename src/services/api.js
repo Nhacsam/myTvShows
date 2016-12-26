@@ -47,3 +47,7 @@ export const callApi = (url, method = 'GET', payload = null, headers = {}) => {
 export const register = (user) => {
   return callApi('/Users', 'POST', user);
 };
+
+export const find = (query) => {
+  return callApi('/TvShows', 'GET');
+};

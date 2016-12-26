@@ -1,5 +1,5 @@
 import { Actions } from 'react-native-router-flux';
-import { takeEvery } from 'redux-saga';
+import { takeLatest } from 'redux-saga';
 import { call, put, select } from 'redux-saga/effects';
 
 import { register as registerAPI } from 'mySeries/src/services/api';
@@ -117,6 +117,7 @@ export function getLoginCredentials(state) {
 function* sendLoginSaga(action) {
   const loginCredential = yield select(getLoginCredentials);
   console.log(loginCredential);
+  Actions.home();
 }
 
 function* sendRegisterSaga(action) {
@@ -133,6 +134,8 @@ function* sendRegisterSaga(action) {
 
 
 export function* loginSaga() {
-  yield* takeEvery(actionTypes.register, sendRegisterSaga);
-  yield* takeEvery(actionTypes.login, sendLoginSaga);
+  yield* [
+    takeLatest(actionTypes.register, sendRegisterSaga),
+    takeLatest(actionTypes.login, sendLoginSaga),
+  ];
 }

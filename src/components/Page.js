@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
+    overflow: 'visible',
   },
 });
 
@@ -15,7 +16,7 @@ const Page = props => (
     style={[styles.page, {
       paddingTop: props.noNavBar ? appStyle.navbar.offset : appStyle.navbar.height,
       paddingHorizontal: props.noMargin ? 0 : appStyle.margins.outer,
-      backgroundColor: props.backgroundColor,
+      backgroundColor: props.backgroundColor || appStyle.colors.background,
     }]}
   >
     {props.children}

@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import { loginReducer as login } from './Login';
+import { tvShowsReducer as tvShows } from './TVshows';
 
 const appReducer = combineReducers({
   login,
+  tvShows,
 });
 
 const initialState = {};
