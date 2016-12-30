@@ -1,6 +1,8 @@
 import { applyMiddleware, createStore, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import createLogger from 'redux-logger';
+import { persistStore, autoRehydrate } from 'redux-persist';
+import { AsyncStorage } from 'react-native';
 
 import reducers from './reducers';
 import rootSaga from './sagas';
@@ -17,6 +19,7 @@ export default (callback) => {
 
   const enhancers = [
     applyMiddleware(...middlewares),
+    autoRehydrate(),
   ];
 
   const store = createStore(
@@ -26,5 +29,5 @@ export default (callback) => {
   );
   sagaMiddleware.run(rootSaga);
 
-  return callback(store);
+  return persistStore(store, { storage: AsyncStorage }, () => callback(store));
 };
