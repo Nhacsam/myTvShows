@@ -1,9 +1,10 @@
-import React, { PropTypes } from 'react';
-import { View, Text, StyleSheet, Image, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
+import React, { PropTypes, Component } from 'react';
+import { View, Text, StyleSheet, Image, TouchableHighlight, TouchableWithoutFeedback, LayoutAnimation, Dimensions } from 'react-native';
 import appStyle from 'mySeries/src/appStyle';
 
 import Title from './Title';
 import TvShowImage from './Image';
+import NextEpisode from './NextEpisode';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,6 +27,13 @@ const styles = StyleSheet.create({
     height: 170,
     zIndex: 1,
   },
+  squareSection: {
+    height: Dimensions.get('window').width / 2,
+    flexDirection: 'row',
+  },
+  section: {
+    flex: 1,
+  }
 });
 
 const colors = [
@@ -43,22 +51,52 @@ const colors = [
   '#ffc107',
 ];
 
-const TvShowListItem = props => (
-  <TouchableWithoutFeedback onPress={props.onPress}>
-    <View style={styles.container}>
-      <Title
-        tvShow={props.tvShow}
-        style={[
-          styles.touchable,
-          (props.index % 2 === 0) ? { left: 5 } : { right: 5 }
-        ]}
-        color={colors[(props.index % colors.length)]}
-        onPress={props.onPress}
-      />
-      <TvShowImage tvShow={props.tvShow} style={styles.image} />
-    </View>
-  </TouchableWithoutFeedback>
-);
+class TvShowListItem extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      openend: false,
+    };
+  }
+
+  componentWillUpdate() {
+    LayoutAnimation.easeInEaseOut();
+  }
+
+  render() {
+    const props = this.props;
+    const { opened } = this.state;
+
+    const titleStyle = opened ? {} : [
+      styles.touchable,
+      (props.index % 2 === 0) ? {left: 5} : {right: 5}
+    ];
+
+    const onPress = () => {
+      this.setState({opened: true});
+      // props.onPress();
+    };
+
+    return (
+      <TouchableWithoutFeedback onPress={onPress}>
+        <View style={styles.container}>
+          <TvShowImage tvShow={props.tvShow} style={ opened ? {} : styles.image} noShadow={opened}/>
+          <View style={opened ? styles.squareSection : titleStyle}>
+            <Title
+              tvShow={props.tvShow}
+              color={colors[(props.index % colors.length)]}
+              onPress={onPress}
+              noShadow={opened}
+              />
+            { opened && <NextEpisode tvShow={this.props.tvShow}/>}
+          </View>
+          { opened && <View style={styles.section}/>}
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
+}
 
 TvShowListItem.propTypes = {
   tvShow: PropTypes.object.isRequired,
@@ -67,6 +105,7 @@ TvShowListItem.propTypes = {
     PropTypes.string,
   ]),
   onPress: PropTypes.func,
+  opened: PropTypes.bool,
 };
 
 TvShowListItem.defaultProps = {

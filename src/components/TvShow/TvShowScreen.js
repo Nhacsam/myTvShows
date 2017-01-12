@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
+import TvShowListItem from './TvShowListItem';
+
 import Title from './Title';
 import TvShowImage from './Image';
 import NextEpisode from './NextEpisode';
@@ -21,6 +23,9 @@ const styles = StyleSheet.create({
 
 class TvShowScreen extends Component {
   render() {
+
+    return <TvShowListItem tvShow={this.props.tvShow} opened />;
+
     return (
       <View style={styles.container}>
         <View style={styles.section}>
