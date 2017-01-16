@@ -5,6 +5,7 @@ import appStyle from 'mySeries/src/appStyle';
 const styles = StyleSheet.create({
   touchable: {
     flex: 1,
+    zIndex: 2,
   },
   square: {
     flex: 1,

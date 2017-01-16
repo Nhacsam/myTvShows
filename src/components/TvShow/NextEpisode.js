@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { View, Text, StyleSheet, Image, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
 import appStyle from 'mySeries/src/appStyle';
+import * as Animatable from 'react-native-animatable';
 
 const styles = StyleSheet.create({
   touchable: {
@@ -24,9 +25,9 @@ const NextEpisode = props => (
     props.style,
   ]}>
     <View style={[styles.square, { backgroundColor: props.color}]}>
-      <Text style={styles.text}>
+      <Animatable.Text style={styles.text} animation="fadeInUp" delay={400}>
         {props.tvShow.vote_average}
-      </Text>
+      </Animatable.Text>
     </View>
   </TouchableHighlight>
 );

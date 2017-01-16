@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { StyleSheet, ListView, ActivityIndicator, View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import * as Animatable from 'react-native-animatable';
 
 import { Page, TvShowListItem } from 'mySeries/src/components';
 
@@ -19,7 +20,8 @@ class Home extends Component {
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1.id !== r2.id}
     );
-    this.state = { dataSource: ds };
+    this.state = { dataSource: ds, active: false, currentId: null };
+    this.listItems = {};
   }
 
   componentWillMount() {
@@ -34,16 +36,52 @@ class Home extends Component {
     });
   }
 
+  setActive(rowID, tvShow) {
+
+    if (this.state.active) {
+      this.animate(false, this.state.currentId);
+      return this.setState({ active: false });
+    }
+
+    this.setState({
+      currentId: rowID,
+      active: true,
+      tvShow,
+    });
+    this.animate(true, rowID);
+  }
+
+  animate(out, currentId) {
+    for (let rowId in this.listItems) {
+      if (rowId === currentId) {
+        continue;
+      }
+      const item = this.listItems[rowId];
+
+      if (out) {
+        item.fadeOutUp(400);
+      } else {
+        item.fadeInUp(400);
+      }
+    }
+
+  }
+
   render() {
-    const { selectTvShow } = this.props;
+    const { active } = this.state;
+
     return (
-      <Page>
+      <Page noMargin={active}>
         {this.props.isFetching && ! this.props.tvShows.length && <ActivityIndicator />}
         <ListView
+          ref="list"
           dataSource={this.state.dataSource}
+          scrollEnabled={!active}
           renderRow={(tvShow, sectionID, rowID) => (
-            <TvShowListItem tvShow={tvShow} index={rowID} onPress={() => selectTvShow && selectTvShow(tvShow)} />)
-          }
+            <Animatable.View ref={(ref) => {this.listItems[rowID] = ref;}} style={{ flex: 1 }} >
+              <TvShowListItem tvShow={tvShow} index={rowID} onPress={() => this.setActive(rowID, tvShow)} />
+            </Animatable.View>
+          )}
           enableEmptySections
           />
       </Page>

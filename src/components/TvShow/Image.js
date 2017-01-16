@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     zIndex: 1,
+    resizeMode: 'cover',
   },
   shadow: {
     shadowColor: 'black',
