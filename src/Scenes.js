@@ -55,11 +55,6 @@ const Scenes = () => (
         title="Tv shows"
         initial
       />
-      <Scene
-        key="tvShow"
-        component={Pages.TvShow}
-        title="Tv Show"
-      />
     </Scene>
   </Router>
 );
