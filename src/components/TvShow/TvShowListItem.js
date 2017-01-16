@@ -30,7 +30,6 @@ const getStyles = (opened, left) => StyleSheet.create({
     },
     closed: {
       flex: 1,
-      position: 'relative',
       alignItems: 'stretch',
       height: 250,
       justifyContent: 'center',
@@ -133,7 +132,7 @@ class TvShowListItem extends Component {
     if (this.state.opened) {
       this.refs.nextEpisode.fadeOutLeft();
       this.refs.description.fadeOutDownBig();
-      return  this.setState({opened: false, windowPos: null, exitEnded: true});
+      return  this.setState({opened: false, windowPos: null, exitEnded: false});
     }
     this.setState({ opened: true });
     this.refs.container.measureInWindow((x, y) => this.setState({
