@@ -36,18 +36,14 @@ class Home extends Component {
     });
   }
 
-  setActive(rowID, tvShow) {
+  toggleActive(rowID) {
 
     if (this.state.active) {
       this.animate(false, this.state.currentId);
       return this.setState({ active: false });
     }
 
-    this.setState({
-      currentId: rowID,
-      active: true,
-      tvShow,
-    });
+    this.setState({ currentId: rowID, active: true });
     this.animate(true, rowID);
   }
 
@@ -79,11 +75,11 @@ class Home extends Component {
           scrollEnabled={!active}
           renderRow={(tvShow, sectionID, rowID) => (
             <Animatable.View ref={(ref) => {this.listItems[rowID] = ref;}} style={{ flex: 1 }} >
-              <TvShowListItem tvShow={tvShow} index={rowID} onPress={() => this.setActive(rowID, tvShow)} />
+              <TvShowListItem tvShow={tvShow} index={rowID} onPress={() => this.toggleActive(rowID)} />
             </Animatable.View>
           )}
           enableEmptySections
-          />
+        />
       </Page>
     );
   }
@@ -93,7 +89,6 @@ Home.propTypes = {
   tvShows: PropTypes.array.isRequired,
   getTvShows: PropTypes.func,
   isFetching: PropTypes.bool,
-  selectTvShow: PropTypes.func
 };
 
 export default Home;

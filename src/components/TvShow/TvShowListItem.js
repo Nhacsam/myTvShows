@@ -1,5 +1,14 @@
 import React, { PropTypes, Component } from 'react';
-import { View, Text, StyleSheet, Image, TouchableHighlight, TouchableWithoutFeedback, LayoutAnimation, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  LayoutAnimation,
+  Dimensions
+} from 'react-native';
 import appStyle from 'mySeries/src/appStyle';
 import * as Animatable from 'react-native-animatable';
 
@@ -9,53 +18,76 @@ import NextEpisode from './NextEpisode';
 
 const height = Dimensions.get('window').height - appStyle.navbar.height;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: 'relative',
-    alignItems: 'stretch',
-    height: 250,
-    justifyContent: 'center',
-  },
-  containerOpened: {
-    height,
-    width: Dimensions.get('window').width,
-    position: 'relative',
-    zIndex: 1,
-  },
-  touchable: {
-    position: 'absolute',
-    top: 25,
+const selectOpened = (opened, style) => opened ? style.opened : style.closed;
 
-    zIndex: 2,
-    height: 200,
-    width: 200,
-  },
-  image: {
-    flex: 0,
-    height: 170,
-    zIndex: 1,
-  },
-  squareSection: {
-    height: Dimensions.get('window').width / 2,
-    flexDirection: 'row',
-  },
-  description: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  descriptionTransition: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
+const getStyles = (opened, left) => StyleSheet.create({
+  container: selectOpened(opened, {
+    opened: {
+      height,
+      width: Dimensions.get('window').width,
+      position: 'relative',
+      zIndex: 1,
+    },
+    closed: {
+      flex: 1,
+      position: 'relative',
+      alignItems: 'stretch',
+      height: 250,
+      justifyContent: 'center',
+    },
+  }),
+  title: selectOpened(opened, {
+    opened: {
+      height: Dimensions.get('window').width / 2,
+      flexDirection: 'row',
+    },
+    closed: {
+      position: 'absolute',
+      top: 25,
+
+      zIndex: 2,
+      height: 200,
+      width: 200,
+      left: left ? 5 : undefined,
+      right: left ? undefined : 5
+    }
+  }),
+  image: selectOpened(opened, {
+    opened: {
+      flex: 1
+    },
+    closed: {
+      flex: 0,
+      height: 170,
+      zIndex: 1,
+    },
+  }),
+  description: selectOpened(opened, {
+    opened: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: 20,
+    },
+    closed: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+  }),
   descriptionText: {
     color: appStyle.colors.lightText,
     textAlign: 'center',
     maxHeight: height / 3,
+  },
+  animatableNextEpisode: {
+    flex: 1,
+    zIndex: 1,
+    position: opened ? undefined : 'absolute',
+    right: 0,
+    bottom: 0,
+    top: 0
   },
 });
 
@@ -101,11 +133,9 @@ class TvShowListItem extends Component {
     if (this.state.opened) {
       this.refs.nextEpisode.fadeOutLeft();
       this.refs.description.fadeOutDownBig();
-      return  this.setState({opened: false, windowPos: null, exitEnded: false});
+      return  this.setState({opened: false, windowPos: null, exitEnded: true});
     }
-    this.setState({
-      opened: true,
-    });
+    this.setState({ opened: true });
     this.refs.container.measureInWindow((x, y) => this.setState({
       windowPos: { x, y },
     }));
@@ -115,33 +145,27 @@ class TvShowListItem extends Component {
   render() {
     const props = this.props;
     const { opened, exitEnded } = this.state;
-
-    const titleStyle = opened ? {} : [
-      styles.touchable,
-      (props.index % 2 === 0) ? {left: 5} : {right: 5}
-    ];
+    const styles = getStyles(opened, (props.index % 2 === 0));
 
     const containerPos = this.state.windowPos ? {
       top: - this.state.windowPos.y + appStyle.navbar.height,
     } : {};
 
-    const containerStyle = [styles.container, this.state.opened && styles.containerOpened, containerPos];
-
     return (
       <TouchableWithoutFeedback onPress={this.onPress}>
-        <View style={containerStyle} ref="container" >
-          <TvShowImage tvShow={props.tvShow} style={ opened ? {flex: 1} : styles.image} noShadow={opened}/>
-          <View style={opened ? styles.squareSection : titleStyle}>
+        <View style={[styles.container, containerPos]} ref="container" >
+          <TvShowImage tvShow={props.tvShow} style={styles.image} noShadow={opened}/>
+          <View style={styles.title}>
             <Title
               tvShow={props.tvShow}
               color={colors[(props.index % colors.length)]}
               onPress={this.onPress}
               noShadow={opened}
-              />
+            />
             { (opened || ! exitEnded) && (
               <Animatable.View
                 animation="slideInLeft"
-                style={{flex: 1, zIndex: 1, position: opened ? undefined : 'absolute', right: 0, bottom: 0, top: 0}}
+                style={styles.animatableNextEpisode}
                 duration={800}
                 ref="nextEpisode"
               >
@@ -152,12 +176,12 @@ class TvShowListItem extends Component {
           { (opened || ! exitEnded) && (
             <Animatable.View
               animation="fadeInUpBig"
-              style={[styles.description, !opened && styles.descriptionTransition ]}
+              style={styles.description}
               duration={800}
               ref="description"
               delay={400}
             >
-              <Text style={styles.descriptionText} >{this.props.tvShow.overview}</Text>
+              <Text style={styles.descriptionText}>{this.props.tvShow.overview}</Text>
             </Animatable.View>
           )}
         </View>
